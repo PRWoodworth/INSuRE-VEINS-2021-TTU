@@ -42,6 +42,8 @@ VeinsInetSampleApplication::VeinsInetSampleApplication()
 
 bool VeinsInetSampleApplication::startApplication()
 {
+//    traci->addVehicle(4, vtype0, route0, 0, 0, 14, 2);
+//    traci->addVehicle(4, vtype0, route0, 0, 0, 14, 3);
     // host[0] should stop at t=20s
     if (getParentModule()->getIndex() == 0) {
         auto callback = [this]() {
@@ -53,7 +55,7 @@ bool VeinsInetSampleApplication::startApplication()
             payload->setChunkLength(B(100));
             payload->setRoadId(traciVehicle->getRoadId().c_str());
             //TODO
-            payload->setMessageType("object_front");
+            payload->setMessageType("runaway");
 
             auto packet = createPacket("maliciousPacket");
             packet->insertAtBack(payload);
@@ -103,7 +105,10 @@ void VeinsInetSampleApplication::processPacket(std::shared_ptr<inet::Packet> pk)
             //Slow down and change lanes, since there is supposedly an object infront of the vehicle.
             traciVehicle->setSpeed(traciVehicle->getSpeed()/2);
             traciVehicle->changeLane(1, 20.00);
-
+        }else if(strcmp(message_type, "runaway") == 0){
+            //Set the acceleration to something higher.
+            traciVehicle->setSpeedMode(0);
+            traciVehicle->setSpeed(traciVehicle->getSpeed()*3);
         }
     }
     auto callback = [this]() {
