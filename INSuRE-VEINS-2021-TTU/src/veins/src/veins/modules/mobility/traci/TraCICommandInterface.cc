@@ -143,6 +143,8 @@ void TraCICommandInterface::Vehicle::changeLane(uint8_t laneIndex, double timeGo
     ASSERT(buf.eof());
 }
 
+
+
 void TraCICommandInterface::Vehicle::setSpeedMode(int32_t bitset)
 {
     uint8_t variableId = VAR_SPEEDSETMODE;
